@@ -1,0 +1,84 @@
+@echo off
+mode con:cols=45 lines=13
+title Idle Utility - he3als
+color 0a
+fltmc >nul 2>&1 || (
+    echo Administrator privileges are required.
+    PowerShell -NonInteractive -NoProfile Start -Verb RunAs '%0' 2> nul || (
+        echo Right-click on the script and select "Run as administrator".
+        pause & exit 1
+    )
+    exit 0
+)
+
+:: Made by he3als
+:: It is recommended to make a shortcut which requests UAC for faster startup times and for a custom icon
+
+:: Enable or disable automatic minimising
+set autominimisedisableidle=true
+set autominimiseenableidle=true
+
+:: Set the default action to do on startup
+set autodisableidle=true
+set autoenableidle=false
+set gotomenu=false
+
+set idlestate=Unknown - set it to on/off here.
+if %gotomenu%==true goto menu
+if %autoenableidle%==true goto enableidle
+
+:disableidle
+powercfg /setacvalueindex scheme_current 54533251-82be-4824-96c1-47b60b740d00 5d76a2ca-e8c0-402f-a133-2158492d58ad 1
+powercfg -setactive scheme_current
+IF %ERRORLEVEL%==1 (
+echo Failed to disable idle^!
+set idlestate=Disabling idle failed!
+pause
+goto menu
+) ELSE (
+set idlestate=Idle is currently disabled!
+if %autominimisedisableidle%==true powershell -NonInteractive -NoProfile -window minimized -command ""
+goto menu
+)
+pause
+
+:enableidle
+powercfg /setacvalueindex scheme_current 54533251-82be-4824-96c1-47b60b740d00 5d76a2ca-e8c0-402f-a133-2158492d58ad 0
+powercfg -setactive scheme_current
+IF %ERRORLEVEL%==1 (
+echo Failed to enable idle!
+set idlestate=Enabling idle failed!
+pause
+goto menu
+) ELSE (
+set idlestate=Idle is currently enabled! 
+if %autominimiseenableidle%==true powershell -NonInteractive -NoProfile -window minimized -command ""
+goto menu
+)
+
+:menu
+cls
+echo.
+echo   Idle Power Plan Utility
+echo   -----------------------------------------
+echo   This script allows you to toggle between
+echo   your processor being locked at C-state 0.
+echo.
+echo   %idlestate%
+echo.
+echo   1) Disable Idle
+echo   2) Enable Idle
+echo   3) Exit
+:: Fix for choice not respecting spaces/padding at the start of the message
+:: Credit to Mathieu in the batch Discord (server.bat)
+setlocal DisableDelayedExpansion
+pushd "%~dp0"
+for /f %%A in ('forfiles /m "%~nx0" /c "cmd /c echo(0x08"') do (
+    set "\B=%%A"
+)
+
+CHOICE /N /C:123 /M ".%\B%  Please input your answer here ->"
+IF %ERRORLEVEL%==1 goto disableidle
+IF %ERRORLEVEL%==2 goto enableidle
+IF %ERRORLEVEL%==3 powercfg /setacvalueindex scheme_current 54533251-82be-4824-96c1-47b60b740d00 5d76a2ca-e8c0-402f-a133-2158492d58ad 0 & exit
+goto menu
