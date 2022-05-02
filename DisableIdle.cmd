@@ -14,6 +14,9 @@ fltmc >nul 2>&1 || (
 :: Made by he3als
 :: It is recommended to make a shortcut which requests UAC for faster startup times and for a custom icon
 
+:: Enable or disable automatically enabling idle on exit
+set enableidleonexit=true
+
 :: Enable or disable automatic minimising
 set autominimisedisableidle=true
 set autominimiseenableidle=true
@@ -23,6 +26,7 @@ set autodisableidle=true
 set autoenableidle=false
 set gotomenu=false
 
+:: Do not touch the script from now on
 set idlestate=Unknown - set it to on/off here.
 if %gotomenu%==true goto menu
 if %autoenableidle%==true goto enableidle
@@ -31,14 +35,14 @@ if %autoenableidle%==true goto enableidle
 powercfg /setacvalueindex scheme_current 54533251-82be-4824-96c1-47b60b740d00 5d76a2ca-e8c0-402f-a133-2158492d58ad 1
 powercfg -setactive scheme_current
 IF %ERRORLEVEL%==1 (
-echo Failed to disable idle^!
-set idlestate=Disabling idle failed!
-pause
-goto menu
+	echo Failed to disable idle^!
+	set idlestate=Disabling idle failed!
+	pause
+	goto menu
 ) ELSE (
-set idlestate=Idle is currently disabled!
-if %autominimisedisableidle%==true powershell -NonInteractive -NoProfile -window minimized -command ""
-goto menu
+	set idlestate=Idle is currently disabled!
+	if %autominimisedisableidle%==true powershell -NonInteractive -NoProfile -window minimized -command ""
+	goto menu
 )
 pause
 
@@ -46,14 +50,14 @@ pause
 powercfg /setacvalueindex scheme_current 54533251-82be-4824-96c1-47b60b740d00 5d76a2ca-e8c0-402f-a133-2158492d58ad 0
 powercfg -setactive scheme_current
 IF %ERRORLEVEL%==1 (
-echo Failed to enable idle!
-set idlestate=Enabling idle failed!
-pause
-goto menu
+	echo Failed to enable idle!
+	set idlestate=Enabling idle failed!
+	pause
+	goto menu
 ) ELSE (
-set idlestate=Idle is currently enabled! 
-if %autominimiseenableidle%==true powershell -NonInteractive -NoProfile -window minimized -command ""
-goto menu
+	set idlestate=Idle is currently enabled! 
+	if %autominimiseenableidle%==true powershell -NonInteractive -NoProfile -window minimized -command ""
+	goto menu
 )
 
 :menu
@@ -80,5 +84,19 @@ for /f %%A in ('forfiles /m "%~nx0" /c "cmd /c echo(0x08"') do (
 CHOICE /N /C:123 /M ".%\B%  Please input your answer here ->"
 IF %ERRORLEVEL%==1 goto disableidle
 IF %ERRORLEVEL%==2 goto enableidle
-IF %ERRORLEVEL%==3 powercfg /setacvalueindex scheme_current 54533251-82be-4824-96c1-47b60b740d00 5d76a2ca-e8c0-402f-a133-2158492d58ad 0 & exit
+IF %ERRORLEVEL%==3 goto exiting
 goto menu
+
+:exiting
+if %enableidleonexit%==false exit else goto exitingenablingidle
+
+:exitingenablingidle
+powercfg /setacvalueindex scheme_current 54533251-82be-4824-96c1-47b60b740d00 5d76a2ca-e8c0-402f-a133-2158492d58ad 0
+powercfg -setactive scheme_current
+IF %ERRORLEVEL%==1 (
+	echo Failed to enable idle!
+	pause
+goto menu
+) ELSE (
+	exit
+)
