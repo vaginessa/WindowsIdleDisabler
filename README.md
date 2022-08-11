@@ -15,7 +15,7 @@ A simple Windows batch script to disable processor idle states. [Click here](htt
 - Easy to use & easy to configure (configuration is done by editing the batch script)
 
 ## Download
-1. Open [this link](https://raw.githubusercontent.com/he3als/AtlasUpdater/main/AtlasUpdaterScript.bat) in a new tab
+1. Open [this link](https://raw.githubusercontent.com/he3als/IdleDisabler/main/DisableIdle.cmd) in a new tab
 2. Right click and click 'Save As' and save it as a `.bat` file
 
 **Note: Your browser may save it as a `.txt` and if that is the case, then just rename it to `.bat`.**
