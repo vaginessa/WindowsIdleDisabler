@@ -20,7 +20,7 @@ A simple Windows batch script to disable processor idle states. [Click here](htt
 
 **Note: Your browser may save it as a `.txt` and if that is the case, then just rename it to `.bat`.**
 
-**If you can not download it directly, [download the .zip](https://github.com/he3als/AtlasUpdater/archive/refs/heads/main.zip) and extract it.**
+**If you can not download it directly, [download the .zip](https://github.com/he3als/IdleDisabler/archive/refs/heads/main.zip) and extract it.**
 
 ## Showcase
 
