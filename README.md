@@ -3,11 +3,11 @@ A simple Windows batch script to disable processor idle states. [Click here](htt
 
 ![image](https://user-images.githubusercontent.com/65787561/158037426-a82087c7-40ff-4d12-98c9-2fa8b9cacc2a.png)
 
-## Warnings
+## Notes
 - **Do not close the batch script using the red X, use the built in exit instead to prevent you from accidently leaving idle disabled**
 - If you have good cooling and do not mind the slightly extra power & potential fan noise, you might want to consider disabling idle constantly
 - Disabling idle will most likely increase CPU temperature (especially on laptops) and fan speed
-- If you do not have good cooling, you should not have idle disabled constantly (especially for laptops)
+- If you do not have good cooling, you **should not** have idle disabled constantly (especially for laptops)
 
 ## Features
 - Automatically minimising (togglable)
